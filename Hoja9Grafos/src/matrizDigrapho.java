@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Clase del grafo direccionado, haciendo uso de una matriz de adyacencia, fragmentos de codigo obtenido
- * del libro Java Structures escrito por Duane A. Bailey tomando como referencia la seccion 16.3.2
+ * Clase del grafo direccionado, haciendo uso de una matriz de adyacencia, varios metodos caracteristicos extraidos de grafos
+ * extraido del libro Java Structures escrito por Duane A. Bailey tomando como referencia la seccion 16.3.2
  * Extraido de http://dept.cs.williams.edu/~bailey/JavaStructures/Book_files/JavaStructures.pdf, tambien haciendo
  * uso de codigo extraido de https://algorithms.tutorialhorizon.com/graph-implementation-adjacency-matrix-set-3/ y
  * de https://opendatastructures.org/ods-java/12_1_AdjacencyMatrix_Repres.html
@@ -14,7 +14,6 @@ import java.util.Map;
 
 public class matrizDigrapho<V> {
     public int size;
-    public arco<V> info[][];
     public Map<V,vertice<V>> vert;
     public List<Integer> freeList;
     public List<String> lista;
@@ -27,7 +26,6 @@ public class matrizDigrapho<V> {
     public matrizDigrapho(int size) {
         this.lista = new ArrayList<>();
         this.size = size;
-        this.info = new arco[size][size];
         this.datos = new Double[size][size];
         this.vert = new HashMap<>(size);
         this.freeList = new ArrayList<>();
@@ -47,10 +45,11 @@ public class matrizDigrapho<V> {
      * @param nombre del vertice
      */
     public void add(V nombre) {
-        if (vert.containsKey(nombre)) return;
-        int pos = freeList.remove(0);
-        vert.put(nombre, new vertice<>(nombre,pos));
-        lista.add(nombre.toString());
+        if (!vert.containsKey(nombre)) {
+            int pos = freeList.remove(0);
+            vert.put(nombre, new vertice<>(nombre,pos));
+            lista.add(nombre.toString());
+        }
     }
 
     /**
@@ -61,13 +60,10 @@ public class matrizDigrapho<V> {
      * @return mensaje si se logro la accion o no
      */
     public String addEdge(V vrt1, V vrt2, double distancia) {
-        vertice<V> inicio = vert.get(vrt1);
-        vertice<V> llegada = vert.get(vrt2);
-        if(inicio == null || llegada == null) {
+        if(vert.get(vrt1) == null || vert.get(vrt2) == null) {
             return "¡No se puede realizar la union!";
         }else {
-            info[inicio.getPosicion()][llegada.getPosicion()] = new arco<V>(vrt1, vrt2, distancia, true);
-            datos[inicio.getPosicion()][llegada.getPosicion()] = distancia;
+            datos[vert.get(vrt1).getPosicion()][vert.get(vrt2).getPosicion()] = distancia;
             return "¡Union realizada!";
         }
     }
@@ -79,19 +75,17 @@ public class matrizDigrapho<V> {
      * @return mensaje si se logro o no
      */
     public String removeEdge(V vrt1, V vrt2){
-        vertice<V> inicio = vert.get(vrt1);
-        vertice<V> llegada = vert.get(vrt2);
-        if(inicio == null || llegada == null) {
+        if(vert.get(vrt1) == null || vert.get(vrt1) == null) {
             return "¡No se puede realizar la accion!";
         }else {
-            info[inicio.getPosicion()][llegada.getPosicion()] = null;
-            datos[inicio.getPosicion()][llegada.getPosicion()] = Double.POSITIVE_INFINITY;
+            datos[vert.get(vrt1).getPosicion()][vert.get(vrt2).getPosicion()] = Double.POSITIVE_INFINITY;
             return "Se ha quitado el camino";
         }
     }
 
     /**
-     * Metodo para imprimir el grafo
+     * Metodo para imprimir el grafo, codigo extrido de http://lineadecodigo.com/java/imprimir-una-matriz-con-java/
+     * modificado para el funcionamiento de este lab
      */
     public void printGraph() {
         System.out.println("Matriz de adyacencia: ");
@@ -117,16 +111,14 @@ public class matrizDigrapho<V> {
      * Implementacion del algoritmo de floyd, metodo extraido de:
      * https://es.wikibooks.org/wiki/Programaci%C3%B3n_en_Java/Ap%C3%A9ndices/Implementaci%C3%B3n_del_algoritmo_de_Floyd_en_Java
      * pero modificado para la funcionalidad de este Hoja
-     * @param adyacencia la matriz original
-     * @return matriz con todos los caminos posibles
      */
-    public Double[][] floyd(Double[][] adyacencia)
+    public void floyd()
     {
-        int n=adyacencia.length;
-        Double D[][]=adyacencia;
+        int n=datos.length;
+        Double D[][]=datos;
 
         String enlaces[][]=new String [n][n];
-        String[][] aux_enlaces=new String[adyacencia.length][adyacencia.length];
+        String[][] aux_enlaces=new String[datos.length][datos.length];
 
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
@@ -156,7 +148,7 @@ public class matrizDigrapho<V> {
                 }
             }
         }
-        return D;
+        datos=D;
     }
 
     /**
@@ -165,7 +157,7 @@ public class matrizDigrapho<V> {
      */
     public String enlaces(int i,int k,String[][] aux_enlaces,String enl_rec)
     {
-        if(aux_enlaces[i][k].equals("")==true)
+        if(aux_enlaces[i][k].equals(""))
         {
             return "";
         }
@@ -183,12 +175,10 @@ public class matrizDigrapho<V> {
      * @return la minima distancia
      */
     public Double minDist(V nom1, V nom2) {
-        vertice<V> vtx1 = vert.get(nom1);
-        vertice<V> vtx2 = vert.get(nom2);
-        if (vtx1 == null || vtx2 == null){
+        if (vert.get(nom1) == null || vert.get(nom2) == null){
             return null;
         }
-        return this.datos[vtx1.getPosicion()][vtx2.getPosicion()];
+        return this.datos[vert.get(nom1).getPosicion()][vert.get(nom2).getPosicion()];
     }
 
     /**

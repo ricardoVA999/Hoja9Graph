@@ -48,7 +48,7 @@ public class matrizDigraphoTest extends TestCase {
         prueba.addEdge("Lucia","Pedro",25);
         prueba.addEdge("Pedro","Rosa",25);
         prueba.printGraph();
-        prueba.datos = prueba.floyd(prueba.datos);
+        prueba.floyd();
         prueba.printGraph();
     }
 }

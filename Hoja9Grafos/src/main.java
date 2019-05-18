@@ -14,7 +14,7 @@ public class main {
         int size = tamaño(link);
         matrizDigrapho<String> myGraph = new matrizDigrapho<>(size);
         myGraph = LeerElDocumento(link ,myGraph);
-        myGraph.datos = myGraph.floyd(myGraph.datos);
+        myGraph.floyd();
         myGraph.printGraph();
         boolean continuar = true;
         while (continuar){
@@ -85,7 +85,7 @@ public class main {
                             }else{
                                 System.out.println("Esa ciudad no se encuentra disponible");
                             }
-                            myGraph.datos=myGraph.floyd(myGraph.datos);
+                            myGraph.floyd();
                             myGraph.printGraph();
                             System.out.println("***************************************************");
                             break;
@@ -105,7 +105,7 @@ public class main {
                             }else{
                                 System.out.println("Esa ciudad no se encuentra disponible");
                             }
-                            myGraph.datos=myGraph.floyd(myGraph.datos);
+                            myGraph.floyd();
                             myGraph.printGraph();
                             System.out.println("***************************************************");
                             break;

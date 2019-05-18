@@ -1,22 +1,22 @@
-public class arco<V,E> {
+public class arco<V> {
     public V vrt1;
     public V vrt2;
-    public E nombre;
+    public double distancia;
     public boolean di;
     public boolean visitado;
 
-    public arco(V vrt1, V vrt2, E nombre, boolean di) {
+    public arco(V vrt1, V vrt2, double dist, boolean di) {
         this.vrt1 = vrt1;
         this.vrt2 = vrt2;
-        this.nombre = nombre;
+        this.distancia = dist;
         this.di = di;
         this.visitado = false;
     }
     public V there(){
         return this.vrt2;
     }
-    public E label(){
-        return this.nombre;
+    public double label(){
+        return this.distancia;
     }
     public boolean isVisited(){
         return visitado;

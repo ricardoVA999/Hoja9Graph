@@ -3,6 +3,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Clase del grafo direccionado, haciendo uso de una matriz de adyacencia, fragmentos de codigo obtenido
+ * del libro Java Structures escrito por Duane A. Bailey tomando como referencia la seccion 16.3.2
+ * Extraido de http://dept.cs.williams.edu/~bailey/JavaStructures/Book_files/JavaStructures.pdf, tambien haciendo
+ * uso de codigo extraido de https://algorithms.tutorialhorizon.com/graph-implementation-adjacency-matrix-set-3/ y
+ * de https://opendatastructures.org/ods-java/12_1_AdjacencyMatrix_Repres.html
+ * @param <V> generico
+ */
+
 public class matrizDigrapho<V> {
     public int size;
     public arco<V> info[][];
@@ -11,6 +20,10 @@ public class matrizDigrapho<V> {
     public List<String> lista;
     Double[][] datos;
 
+    /**
+     * Contructor
+     * @param size tamaño para las matrices, y el hashmap
+     */
     public matrizDigrapho(int size) {
         this.lista = new ArrayList<>();
         this.size = size;
@@ -28,12 +41,25 @@ public class matrizDigrapho<V> {
             }
         }
     }
+
+    /**
+     * Metodo para añadir un vertice al grafo (matriz)
+     * @param nombre del vertice
+     */
     public void add(V nombre) {
         if (vert.containsKey(nombre)) return;
         int pos = freeList.remove(0);
         vert.put(nombre, new vertice<>(nombre,pos));
         lista.add(nombre.toString());
     }
+
+    /**
+     * Metodo para añadir una arista con valor
+     * @param vrt1 origen
+     * @param vrt2 destino
+     * @param distancia valor
+     * @return mensaje si se logro la accion o no
+     */
     public String addEdge(V vrt1, V vrt2, double distancia) {
         vertice<V> inicio = vert.get(vrt1);
         vertice<V> llegada = vert.get(vrt2);
@@ -45,6 +71,13 @@ public class matrizDigrapho<V> {
             return "¡Union realizada!";
         }
     }
+
+    /**
+     * Metodo para remover una arista
+     * @param vrt1 origen
+     * @param vrt2 destino
+     * @return mensaje si se logro o no
+     */
     public String removeEdge(V vrt1, V vrt2){
         vertice<V> inicio = vert.get(vrt1);
         vertice<V> llegada = vert.get(vrt2);
@@ -56,8 +89,17 @@ public class matrizDigrapho<V> {
             return "Se ha quitado el camino";
         }
     }
+
+    /**
+     * Metodo para imprimir el grafo
+     */
     public void printGraph() {
         System.out.println("Matriz de adyacencia: ");
+        System.out.print("\t\t\t");
+        for(int k = lista.size()-1; k >=0; k--){
+            System.out.print(lista.get(k)+"\t\t");
+        }
+        System.out.println("");
         int no = lista.size()-1;
         for (int i = 0; i < datos.length; i++) {
             if(no>=0){
@@ -65,15 +107,19 @@ public class matrizDigrapho<V> {
                 no--;
             }
             for (int j = 0; j <datos.length; j++) {
-                System.out.print(datos[i][j]+ " ");
+                System.out.print(datos[i][j]+ "\t\t");
             }
             System.out.println();
         }
     }
 
-
-
-
+    /**
+     * Implementacion del algoritmo de floyd, metodo extraido de:
+     * https://es.wikibooks.org/wiki/Programaci%C3%B3n_en_Java/Ap%C3%A9ndices/Implementaci%C3%B3n_del_algoritmo_de_Floyd_en_Java
+     * pero modificado para la funcionalidad de este Hoja
+     * @param adyacencia la matriz original
+     * @return matriz con todos los caminos posibles
+     */
     public Double[][] floyd(Double[][] adyacencia)
     {
         int n=adyacencia.length;
@@ -113,6 +159,10 @@ public class matrizDigrapho<V> {
         return D;
     }
 
+    /**
+     * Metodo de ayuda para el algoritmo de floyd, extriado de:
+     * https://es.wikibooks.org/wiki/Programaci%C3%B3n_en_Java/Ap%C3%A9ndices/Implementaci%C3%B3n_del_algoritmo_de_Floyd_en_Java
+     */
     public String enlaces(int i,int k,String[][] aux_enlaces,String enl_rec)
     {
         if(aux_enlaces[i][k].equals("")==true)
@@ -125,16 +175,27 @@ public class matrizDigrapho<V> {
             return enl_rec;
         }
     }
-    public String minDist(V nom1, V nom2) {
+
+    /**
+     * Metodo para obtener la minima distancia entre dos vertices
+     * @param nom1 origen
+     * @param nom2 destino
+     * @return la minima distancia
+     */
+    public Double minDist(V nom1, V nom2) {
         vertice<V> vtx1 = vert.get(nom1);
         vertice<V> vtx2 = vert.get(nom2);
         if (vtx1 == null || vtx2 == null){
-            return "No hay conexion!";
+            return null;
         }
-        return "\nDesde " +nom1.toString()+" a "+ nom2.toString()+" la distancia mas corta es de "+this.datos[vtx1.getPosicion()][vtx2.getPosicion()] + ".";
+        return this.datos[vtx1.getPosicion()][vtx2.getPosicion()];
     }
 
-    public String getCentroGrafo(V label){
+    /**
+     * Metodo para obtener el centro del grafo
+     * @return el nombre de la cuidad en el centro
+     */
+    public String centro(){
 
         int[] columna = new int[datos.length];
         for(int i = 0; i < datos.length; i++) {

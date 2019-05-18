@@ -1,7 +1,7 @@
-Guatemala Mixco 60
-Guatemala Peten 463
-Retalhuleu Guatemala 100
-Antigua Guatemala 36
-Guatemala Antigua 36
+Guate Mixco 60
+Guate Peten 463
+Retal Guate 100
+Antigua Guate 36
+Guate Antigua 36
 Solola Peten 120
-Antigua Retalhuleu 190
+Antigua Retal 190
